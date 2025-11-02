@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { TextField } from '../TextField';
-import { Movie } from '../../types/Movie';
+import type { Movie } from '../../types/Movie';
 
 type Props = {
   onAdd?: (movie: Movie) => void;
@@ -15,15 +15,23 @@ export const NewMovie: React.FC<Props> = ({ onAdd = () => {} }) => {
 
   const [count, setCount] = useState(0);
 
-  const isValid = Boolean(title && imgUrl && imdbUrl && imdbId);
+  const isValid =
+    !!title.trim() && !!imgUrl.trim() && !!imdbUrl.trim() && !!imdbId.trim();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     if (!isValid) {
       return;
     }
 
-    const movie: Movie = { title, description, imgUrl, imdbUrl, imdbId };
+    const movie: Movie = {
+      title,
+      description,
+      imgUrl,
+      imdbUrl,
+      imdbId,
+    };
 
     onAdd(movie);
 
@@ -32,7 +40,7 @@ export const NewMovie: React.FC<Props> = ({ onAdd = () => {} }) => {
     setImgUrl('');
     setImdbUrl('');
     setImdbId('');
-    setCount(c => c + 1);
+    setCount(currentCount => currentCount + 1);
   };
 
   return (
@@ -46,12 +54,14 @@ export const NewMovie: React.FC<Props> = ({ onAdd = () => {} }) => {
         onChange={setTitle}
         required
       />
+
       <TextField
         name="description"
         label="Description"
         value={description}
         onChange={setDescription}
       />
+
       <TextField
         name="imgUrl"
         label="Image URL"
@@ -59,6 +69,7 @@ export const NewMovie: React.FC<Props> = ({ onAdd = () => {} }) => {
         onChange={setImgUrl}
         required
       />
+
       <TextField
         name="imdbUrl"
         label="Imdb URL"
@@ -66,6 +77,7 @@ export const NewMovie: React.FC<Props> = ({ onAdd = () => {} }) => {
         onChange={setImdbUrl}
         required
       />
+
       <TextField
         name="imdbId"
         label="Imdb ID"
@@ -89,3 +101,5 @@ export const NewMovie: React.FC<Props> = ({ onAdd = () => {} }) => {
     </form>
   );
 };
+
+export default NewMovie;
